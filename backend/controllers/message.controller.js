@@ -1,6 +1,7 @@
 import { catchAsync } from "../utils/catchAsync.js";
 import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
+import { getReceiverSocketId, io } from "../socket/socket.js";
 
 export const sendMessage = catchAsync(async (req, res, next) => {
   const { message } = req.body;
@@ -29,6 +30,9 @@ export const sendMessage = catchAsync(async (req, res, next) => {
   }
 
   await Promise.all([conversation.save(), newMessage.save()]);
+
+  const socketId = getReceiverSocketId(receiverId);
+  io.to(socketId).emit("newMessage", newMessage);
 
   res.status(201).send(newMessage);
 });
