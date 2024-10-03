@@ -37,6 +37,8 @@ export const login = catchAsync(async (req, res, next) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username }).select("+password");
 
+  if (!user) return next(new AppError("Invalid username or password"));
+
   const isCorrect = await user.comparePassword(password);
 
   if (!user || !isCorrect)

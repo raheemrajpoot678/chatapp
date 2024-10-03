@@ -3,16 +3,9 @@ import useConversation from "@/zustand/useConversations";
 import React from "react";
 
 export default function Conversation({ conversation, lastInx }) {
-  const {
-    selectedConversation,
-    setSelectedConversation,
-    newMsgUsers,
-    setNewMsgUsers,
-  } = useConversation();
+  const { selectedConversation, setSelectedConversation } = useConversation();
 
   const { onlineUsers } = useSocketContext();
-
-  const isNewMsg = newMsgUsers?.includes(conversation?._id);
 
   const isSelected = selectedConversation?._id === conversation?._id;
   const isOnline = onlineUsers?.includes(conversation?._id);
@@ -23,7 +16,6 @@ export default function Conversation({ conversation, lastInx }) {
       } ${!lastInx ? "border-b" : ""}`}
       onClick={() => {
         setSelectedConversation(conversation);
-        setNewMsgUsers();
       }}
     >
       <div className="relative">
@@ -45,11 +37,6 @@ export default function Conversation({ conversation, lastInx }) {
           <span className="text-sm text-gray-600">
             {isOnline ? "Online" : "Offline"}
           </span>
-          {isNewMsg && (
-            <div className="text-[10px] bg-gray-500 text-white h-4 w-4 rounded-full flex items-center justify-center">
-              <p>1</p>
-            </div>
-          )}
         </div>
       </div>
     </div>
